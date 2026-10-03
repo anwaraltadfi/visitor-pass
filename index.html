@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Campus Visitor Pass</title>
+  <meta name="description" content="A classroom prototype for requesting, approving, and checking campus visitor passes.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b4053'/%3E%3Cpath d='M9 16l5 5 10-11' stroke='white' stroke-width='3' fill='none'/%3E%3C/svg%3E">
+  <style>
+    :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17313f;background:#f4f6f5;font-synthesis:none;--green:#176653;--line:#d7e0dd;--muted:#5c6e75}
+    *{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer;border:0;border-radius:8px;padding:12px 19px;background:var(--green);color:white;font-weight:650}button:hover{filter:brightness(.93)}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #dfaa4a;outline-offset:3px}button.secondary{background:#edf2f0;color:#224d42}button.deny{background:#fff0eb;color:#a03c24}button:disabled{opacity:.6;cursor:default}header{padding:25px max(24px,calc((100vw - 1060px)/2));background:#173e4f;color:white;border-bottom:4px solid #e0b765}.brand{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#dce8e9}header h1{font-size:clamp(27px,4vw,39px);margin:9px 0 5px;letter-spacing:-.025em}header p{margin:0;color:#d5e4e7}main{max-width:1060px;margin:28px auto;padding:0 24px}.demo-note{margin:0 0 24px;color:#566c73;font-size:14px;line-height:1.6}.role-bar{display:flex;justify-content:space-between;gap:20px;align-items:center;padding-bottom:23px;border-bottom:1px solid var(--line)}.role-bar label{font-weight:650}.role-buttons{display:flex;gap:7px}.role-buttons button{background:transparent;color:#52656b;border:1px solid #cbd8d3}.role-buttons button[aria-pressed=true]{color:white;background:var(--green);border-color:var(--green)}.layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:48px;margin-top:32px}h2{font-size:27px;margin:0 0 9px;letter-spacing:-.02em}.intro{margin:0 0 28px;color:var(--muted);line-height:1.6}.field{display:grid;gap:8px;margin-bottom:20px}.field label{font-weight:600;font-size:15px}input,select{width:100%;border:1px solid #b8c8c1;border-radius:7px;background:white;padding:13px 12px;color:#17313f}input::placeholder{color:#7c8e93}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}.hint{font-size:13px;color:#687b80}.message{line-height:1.6;margin:18px 0;padding:14px 16px;border-radius:8px;background:#e3f3eb;color:#14523e}.message.error{background:#fff0eb;color:#913c25}.message:empty{display:none}aside{border-left:1px solid var(--line);padding-left:28px;color:var(--muted);font-size:14px;line-height:1.7}aside h3{color:#214450;font-size:17px;margin:0 0 14px}.steps{margin:0;padding-left:22px}.steps li{padding:0 0 17px 5px}.steps strong{display:block;color:#294c57}.request{background:white;border:1px solid var(--line);border-radius:10px;padding:20px;margin:14px 0}.request h3{margin:0 0 7px;font-size:19px}.request p{margin:6px 0;color:var(--muted);line-height:1.5}.actions{display:flex;gap:10px;margin-top:17px}.pass-code{font:650 22px ui-monospace,monospace;letter-spacing:.08em;overflow-wrap:anywhere}.empty{border:1px dashed #b8c8c1;padding:28px 20px;border-radius:8px;color:#62767d}.audit{margin-top:30px;border-top:1px solid var(--line);padding-top:18px}.audit summary{font-size:14px;cursor:pointer;color:var(--muted)}.audit ul{padding:0;list-style:none;font-size:13px;line-height:1.7}.audit li{padding:7px 0;border-bottom:1px solid #e4ebe7}footer{margin:45px 0 20px;padding-top:20px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:20px;font-size:13px;color:var(--muted)}footer button{padding:9px 13px;font-size:13px}[hidden]{display:none!important}@media(max-width:760px){.layout{grid-template-columns:1fr;gap:30px}aside{border-left:0;border-top:1px solid var(--line);padding:22px 0 0}.role-bar{align-items:flex-start;flex-direction:column}.role-buttons{width:100%}.role-buttons button{flex:1;padding:11px}.form-row{grid-template-columns:1fr;gap:0}main{padding:0 20px;margin:22px auto}footer{align-items:flex-start}.request{padding:17px}}
+  </style>
+</head>
+<body>
+<header><div class="brand">Bay Atlantic University</div><h1>Campus Visitor Pass</h1><p>A simple visit, from request to arrival.</p></header>
+<main>
+  <p class="demo-note">Classroom demo. Use fictional names. Roles are simulated, and requests disappear when you reload this page.</p>
+  <div class="role-bar"><label>Demo role</label><div class="role-buttons" role="group" aria-label="Choose a demo role"><button type="button" data-role="Visitor" aria-pressed="true">Visitor</button><button type="button" data-role="Host" aria-pressed="false">Host</button><button type="button" data-role="Guard" aria-pressed="false">Guard</button></div></div>
+  <div class="layout">
+    <div>
+      <section id="visitor-panel"><h2>Request a visit</h2><p class="intro">Choose your campus host and visit date. Your host will review the request.</p>
+        <form id="request-form" novalidate><div class="field"><label for="visitor-name">Visitor name</label><input id="visitor-name" name="name" autocomplete="off" placeholder="e.g. Alex Morgan" maxlength="80" required><span class="hint">2–80 characters. Letters, spaces, apostrophes and hyphens.</span></div><div class="form-row"><div class="field"><label for="visit-date">Visit date</label><input id="visit-date" type="date" required></div><div class="field"><label for="visitor-host">Campus host</label><select id="visitor-host" required><option value="">Select a host</option><option value="admissions">Admissions Office</option><option value="student-services">Student Services</option><option value="academic-office">Academic Office</option></select></div></div><button type="submit">Send request</button></form>
+        <div id="visitor-message" class="message" role="status" aria-live="polite"></div>
+        <div id="visitor-receipt"></div>
+        <div id="role-proof" hidden><p class="hint">Security check: a Visitor cannot approve a request.</p><button class="secondary" type="button" id="try-approval">Try approval as Visitor</button><div id="proof-message" class="message" role="status"></div></div>
+      </section>
+      <section id="host-panel" hidden><h2>Review visitor requests</h2><p class="intro">Approve requests assigned to your office. Approval creates a pass code for the visitor.</p><div class="field"><label for="acting-host">Simulated host identity</label><select id="acting-host"><option value="admissions">Admissions Office</option><option value="student-services">Student Services</option><option value="academic-office">Academic Office</option></select></div><div id="host-message" class="message" role="status" aria-live="polite"></div><div id="pending-list"></div><div id="decision-list"></div></section>
+      <section id="guard-panel" hidden><h2>Check a visitor pass</h2><p class="intro">A pass is valid only after approval and on its visit date. Guard results show no visitor personal details.</p><form id="check-form" novalidate><div class="field"><label for="pass-code">Pass code</label><input id="pass-code" autocomplete="off" placeholder="12-character pass code" maxlength="12" autocapitalize="characters" spellcheck="false"></div><button type="submit">Check pass</button></form><div id="guard-message" class="message" role="status" aria-live="polite"></div></section>
+      <details class="audit"><summary>Demo activity log</summary><ul id="audit-list"></ul><p class="hint">Events contain request IDs and actions, without visitor names or pass codes.</p></details>
+    </div>
+    <aside><h3>How a campus pass works</h3><ol class="steps"><li><strong>Visitor requests</strong>Submit a name, date and host.</li><li><strong>Host decides</strong>Only the assigned host can approve or deny.</li><li><strong>Guard checks</strong>Present an approved pass on the visit date.</li></ol><p>For the live demo, select today’s date to show a valid pass.</p></aside>
+  </div>
+  <footer><span>Week 6 project<br>Security and testability</span><button type="button" class="secondary" id="reset-demo">Reset demo data</button></footer>
+</main>
+<script id="core">
+'use strict';
+// Application and repository layers share one page for the classroom proof.
+const VisitorPassCore = (() => {
+  const HOSTS = Object.freeze({'admissions':'Admissions Office','student-services':'Student Services','academic-office':'Academic Office'});
+  function localDate(d = new Date()) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+  function createMemoryRepository() {
+    const records = new Map();
+    const copy = value => structuredClone(value);
+    return { save(record) { records.set(record.id, copy(record)); }, get(id) { const r=records.get(id);return r ? copy(r):null; }, all() { return [...records.values()].map(copy); }, clear() { records.clear(); } };
+  }
+  function secureCode() { const bytes = new Uint8Array(12);crypto.getRandomValues(bytes);const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return [...bytes].map(b=>alphabet[b%32]).join(''); }
+  function createService({repository, actor, today=localDate, now=()=>new Date().toISOString(), code=secureCode, id=()=>crypto.randomUUID(), audit=()=>{}}) {
+    function requireRole(role) { const a=actor();if(!a || a.role!==role){audit({action:'access-denied',role:a?.role||'unknown',at:now()});throw new Error(`Access denied: only ${role} can perform this action.`);}return a; }
+    function log(action,record){audit({action,requestId:record.id,role:actor().role,at:now()});}
+    function validate(input) {
+      if (!input || typeof input.name!=='string' || typeof input.date!=='string' || typeof input.host!=='string') throw new Error('Please provide a name, date and host.');
+      const name=input.name.trim().replace(/\s+/g,' ');
+      if(name.length<2 || name.length>80 || !/^[\p{L}\p{M}][\p{L}\p{M} '\u2019-]*$/u.test(name)) throw new Error('Enter a name of 2–80 characters using letters, spaces, apostrophes or hyphens.');
+      const date=input.date;
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date+'T00:00:00Z')) || new Date(date+'T00:00:00Z').toISOString().slice(0,10)!==date) throw new Error('Choose a valid visit date.');
+      if(date<today()) throw new Error('Choose today or a future visit date.');
+      if(!Object.hasOwn(HOSTS,input.host)) throw new Error('Choose a campus host from the list.');
+      return {name,date,host:input.host};
+    }
+    return {
+      request(input) {requireRole('Visitor');const fields=validate(input);const r={...fields,id:id(),status:'pending',code:null};repository.save(r);log('request-created',r);return structuredClone(r);},
+      listForHost() {const a=requireRole('Host');return repository.all().filter(r=>r.host===a.hostId);},
+      decide(requestId,decision) {const a=requireRole('Host');if(!['approved','denied'].includes(decision))throw new Error('Choose approve or deny.');const r=repository.get(requestId);if(!r)throw new Error('Request not found.');if(r.host!==a.hostId){audit({action:'host-access-denied',requestId,role:a.role,at:now()});throw new Error('Access denied: this request belongs to another host.');}if(r.status!=='pending')throw new Error('This request already has a decision.');if(decision==='approved' && r.date<today())throw new Error('This visit date has passed.');if(decision==='approved'){let generated;for(let attempt=0;attempt<10;attempt++){const candidate=code();if(!/^[A-HJ-NP-Z2-9]{12}$/.test(candidate))throw new Error('Could not generate a valid pass code.');if(!repository.all().some(x=>x.code===candidate)){generated=candidate;break;}}if(!generated)throw new Error('Could not create a unique pass code. Try again.');r.code=generated;}r.status=decision;repository.save(r);log('request-'+decision,r);return structuredClone(r);},
+      verify(value) {requireRole('Guard');const entered=typeof value==='string'?value.trim().toUpperCase():'';if(!/^[A-HJ-NP-Z2-9]{12}$/.test(entered))return {valid:false};const r=repository.all().find(r=>r.code===entered && r.status==='approved' && r.date===today());audit({action:'pass-checked',valid:!!r,role:'Guard',at:now()});return r ? {valid:true,date:r.date}:{valid:false};}
+    };
+  }
+  return {HOSTS,localDate,createMemoryRepository,createService};
+})();
+</script>
+<script id="ui">
+(() => {
+  const $=id=>document.getElementById(id);
+  let role='Visitor', hostId='admissions', latestId=null, approvedReceipt=null;
+  const repository=VisitorPassCore.createMemoryRepository();
+  const events=[];
+  const service=VisitorPassCore.createService({repository,actor:()=>({role,hostId}),audit:e=>{events.unshift(e);events.splice(100);renderAudit();}});
+  $('visit-date').value=VisitorPassCore.localDate();$('visit-date').min=VisitorPassCore.localDate();
+  function message(id,text,error=false){const el=$(id);el.textContent=text;el.className='message'+(error?' error':'');}
+  function renderAudit(){const ul=$('audit-list');ul.replaceChildren();for(const e of events.slice(0,8)){const li=document.createElement('li');li.textContent=`${e.at.slice(11,19)} · ${e.action} · ${e.role}${e.requestId?' · '+e.requestId.slice(0,8):''}`;ul.append(li);}}
+  function requestCard(r,actionable=false){const box=document.createElement('article');box.className='request';const h=document.createElement('h3');h.textContent=r.name;box.append(h);const p=document.createElement('p');p.textContent=`${r.date} · ${VisitorPassCore.HOSTS[r.host]} · ${r.status}`;box.append(p);if(r.code){const code=document.createElement('p');code.className='pass-code';code.textContent=r.code;box.append(code);}if(actionable){const actions=document.createElement('div');actions.className='actions';for(const [label,value,cls] of [['Approve','approved',''],['Deny','denied','deny']]){const b=document.createElement('button');b.type='button';b.textContent=label;b.className=cls;b.addEventListener('click',()=>{try{const decided=service.decide(r.id,value);if(decided.id===latestId)approvedReceipt=decided;message('host-message',value==='approved'?'Approved. Give the visitor the code shown below.':'Request denied.');renderHost();renderReceipt();}catch(e){message('host-message',e.message,true);}});actions.append(b);}box.append(actions);}return box;}
+  function renderHost(){if(role!=='Host')return;const records=service.listForHost();$('pending-list').replaceChildren();$('decision-list').replaceChildren();const pending=records.filter(r=>r.status==='pending');if(!pending.length){const p=document.createElement('p');p.className='empty';p.textContent='No pending requests for this host.';$('pending-list').append(p);}for(const r of pending)$('pending-list').append(requestCard(r,true));for(const r of records.filter(r=>r.status!=='pending'))$('decision-list').append(requestCard(r));}
+  function renderReceipt(){const out=$('visitor-receipt');out.replaceChildren();if(approvedReceipt){const p=document.createElement('p');p.className='hint';p.textContent='Your latest request';out.append(p,requestCard(approvedReceipt));}}
+  function selectRole(next){role=next;for(const b of document.querySelectorAll('[data-role]'))b.setAttribute('aria-pressed',String(b.dataset.role===role));for(const value of ['Visitor','Host','Guard'])$(value.toLowerCase()+'-panel').hidden=value!==role;message('guard-message','');message('proof-message','');if(role==='Host')renderHost();if(role==='Visitor')renderReceipt();}
+  for(const b of document.querySelectorAll('[data-role]'))b.addEventListener('click',()=>selectRole(b.dataset.role));
+  $('acting-host').addEventListener('change',e=>{hostId=e.target.value;message('host-message','');renderHost();});
+  $('request-form').addEventListener('submit',e=>{e.preventDefault();try{const r=service.request({name:$('visitor-name').value,date:$('visit-date').value,host:$('visitor-host').value});latestId=r.id;approvedReceipt=r;message('visitor-message','Request sent. Your campus host will review it.');$('role-proof').hidden=false;renderReceipt();message('proof-message','');}catch(err){message('visitor-message',err.message,true);}});
+  $('try-approval').addEventListener('click',()=>{try{service.decide(latestId,'approved');message('proof-message','Approved.');}catch(err){message('proof-message',err.message,true);}});
+  $('check-form').addEventListener('submit',e=>{e.preventDefault();try{const result=service.verify($('pass-code').value);message('guard-message',result.valid?`Valid pass for ${result.date}. Entry approved.`:'Invalid pass. Check the code, approval status and visit date.',!result.valid);}catch(err){message('guard-message',err.message,true);}});
+  $('reset-demo').addEventListener('click',()=>{if(!window.confirm('Clear all demo requests and activity?'))return;repository.clear();events.length=0;latestId=null;approvedReceipt=null;for(const id of ['visitor-message','host-message','guard-message','proof-message'])message(id,'');$('visitor-receipt').replaceChildren();$('role-proof').hidden=true;$('request-form').reset();$('check-form').reset();$('visit-date').value=VisitorPassCore.localDate();renderAudit();selectRole('Visitor');});
+})();
+</script>
+</body>
+</html>
